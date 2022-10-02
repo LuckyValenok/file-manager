@@ -5,6 +5,10 @@
     <title>File Manager</title>
 </head>
 <body>
+<form method="post">
+    <input type="submit" name="exit" value="Exit"/>
+</form>
+<hr>
 <h3>${currentPath}</h3>
 <hr>
 <h4>${date}</h4>
