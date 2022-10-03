@@ -5,6 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
     public static String getValue(Cookie[] cookies, String key) {
+        if (cookies == null) {
+            return null;
+        }
+
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(key)) {
                 return cookie.getValue();

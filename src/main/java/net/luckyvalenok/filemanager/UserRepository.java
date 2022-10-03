@@ -7,11 +7,12 @@ import java.util.Map;
 public class UserRepository {
     public static final UserRepository USER_REPOSITORY = new UserRepository();
     private final Map<String, User> usersByLogin = new HashMap<>();
+    private final Map<String, User> userBySession = new HashMap<>();
 
     public User getUserByCookies(Cookie[] cookies) {
-        String login;
-        User user = null;
-        if ((login = CookieUtil.getValue(cookies, "login")) == null || (user = getUserByLogin(login)) == null || !user.getPassword().equals(CookieUtil.getValue(cookies, "password"))) {
+        String session;
+        User user;
+        if ((session = CookieUtil.getValue(cookies, "JSESSIONID")) == null || (user = userBySession.get(session)) == null) {
             return null;
         }
 
@@ -24,6 +25,14 @@ public class UserRepository {
 
     public void addUser(User user) {
         usersByLogin.put(user.getLogin(), user);
+    }
+
+    public void addUserBySession(String session, User user) {
+        userBySession.put(session, user);
+    }
+
+    public void removeUserBySession(String session) {
+        userBySession.remove(session);
     }
 
     public void removeUser(String login) {

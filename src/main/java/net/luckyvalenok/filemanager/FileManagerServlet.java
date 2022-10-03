@@ -56,8 +56,8 @@ public class FileManagerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (req.getParameter("exit") != null) {
-            CookieUtil.addCookie(resp, "login", "");
-            CookieUtil.addCookie(resp, "password", "");
+            UserRepository.USER_REPOSITORY.removeUserBySession(CookieUtil.getValue(req.getCookies(), "JSESSIONID"));
+            CookieUtil.addCookie(resp, "JSESSIONID", null);
             resp.sendRedirect("/");
         }
     }

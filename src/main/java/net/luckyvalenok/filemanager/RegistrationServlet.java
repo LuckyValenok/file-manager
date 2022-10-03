@@ -3,7 +3,6 @@ package net.luckyvalenok.filemanager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,8 +34,7 @@ public class RegistrationServlet extends HttpServlet {
 
         User user = new User(login, email, password);
         UserRepository.USER_REPOSITORY.addUser(user);
-        CookieUtil.addCookie(resp, "login", login);
-        CookieUtil.addCookie(resp, "password", password);
+        UserRepository.USER_REPOSITORY.addUserBySession(CookieUtil.getValue(req.getCookies(), "JSESSIONID"), user);
         resp.sendRedirect("/");
     }
 }
