@@ -15,7 +15,7 @@
 
     <button type="submit">Login</button>
 </form>
-<a href="/registration">
+<a href="${contextPath}/registration">
     <button>Registration</button>
 </a>
 </body>
