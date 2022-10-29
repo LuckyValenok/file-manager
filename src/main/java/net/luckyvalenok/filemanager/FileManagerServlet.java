@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +22,12 @@ public class FileManagerServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        User user = UserRepository.USER_REPOSITORY.getUserByCookies(req.getCookies());
+        User user;
+        try {
+            user = UserRepository.USER_REPOSITORY.getUserByCookies(req.getCookies());
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
@@ -57,7 +63,11 @@ public class FileManagerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (req.getParameter("exit") != null) {
-            UserRepository.USER_REPOSITORY.removeUserBySession(CookieUtil.getValue(req.getCookies(), "JSESSIONID"));
+            try {
+                UserRepository.USER_REPOSITORY.removeUserBySession(CookieUtil.getValue(req.getCookies(), "JSESSIONID"));
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
             CookieUtil.addCookie(resp, "JSESSIONID", null);
             resp.sendRedirect(req.getContextPath() + "/");
         }
